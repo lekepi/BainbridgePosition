@@ -1,12 +1,7 @@
-import win32com.client
-import os
-from datetime import datetime, timedelta
-import sys
-# https://www.codeforests.com/2021/05/16/python-reading-email-from-outlook-2/
+import logging
 
+logging.basicConfig(format='%(asctime)s-%(levelname)s-%(message)s', level=logging.INFO, filename='app.log')
 
-outlook = win32com.client.Dispatch('outlook.application')
-mapi = outlook.GetNamespace('MAPI')
-
-for idx, folder in enumerate(mapi.Folders(1).Folders(2).Folders(6)):
-    print(idx+1, folder)
+if __name__ == '__main__':
+    print("HELLO")
+    logging.info("test program started", exc_info=True)

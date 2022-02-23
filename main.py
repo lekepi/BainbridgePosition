@@ -149,6 +149,7 @@ def bainbridge_pos_email(my_date, search_file, fund_name):
 
 
 if __name__ == '__main__':
+    logging.info("BainbidgePosition started", exc_info=True)
     my_date = datetime.today()
     bainbridge_all_pos_email(my_date)
 
