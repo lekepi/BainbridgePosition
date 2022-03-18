@@ -69,7 +69,7 @@ def bainbridge_pos_email(my_date, search_file, fund_name):
     end_time = my_date.replace(hour=23, minute=59, second=59).strftime('%Y-%m-%d %H:%M')
 
     messages = mapi.Folders(1).Folders(2).Items
-    messages = messages.Restrict("[ReceivedTime] >= '" + start_time + "' And [ReceivedTime] <= '" + end_time + "'")
+    # messages = messages.Restrict("[ReceivedTime] >= '" + start_time + "' And [ReceivedTime] <= '" + end_time + "'")
     messages.Sort("[ReceivedTime]", Descending=True)
 
     for message in messages:
@@ -78,10 +78,12 @@ def bainbridge_pos_email(my_date, search_file, fund_name):
 
     if not found_message:
         messages = mapi.Folders(1).Folders(2).Folders(bb_num).Items
-        messages = messages.Restrict("[ReceivedTime] >= '" + start_time + "' And [ReceivedTime] <= '" + end_time + "'")
+        # messages = messages.Restrict("[ReceivedTime] >= '" + start_time + "' And [ReceivedTime] <= '" + end_time + "'")
         messages.Sort("[ReceivedTime]", Descending=True)
         for message in messages:
-            if message.subject.startswith(search_file):
+            subject = message.subject
+            received_time = message.ReceivedTime
+            if subject.startswith(search_file):
                 found_message = message
                 break
 
@@ -119,7 +121,7 @@ def bainbridge_pos_email(my_date, search_file, fund_name):
             des = f"Position_bainb issue: the product {ticker} is unknown, the position is not added"
             add_log_db("Bainb Position", f'Bainb Position {fund_name} - {my_date_str}', "Unknown Product", des, 'Error')
         else:
-            product=product_matches[0]
+            product = product_matches[0]
 
             new_pos_bainb = PositionBainb(entry_date=my_date,
                                           parent_fund_id=fund_id,
