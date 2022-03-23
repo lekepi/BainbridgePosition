@@ -1,6 +1,6 @@
 import win32com.client
 import os
-from datetime import datetime
+from datetime import datetime, timedelta
 from models import config_class, session, PositionBainb, ParentFund, Product, TaskChecker
 from utils import task_checker_db, add_log_db
 import pandas as pd
@@ -64,9 +64,6 @@ def bainbridge_pos_email(my_date, search_file, fund_name):
         if folder.name == 'BainBridge Daily File':
             bb_num = index + 1
             break
-
-    start_time = my_date.replace(hour=0, minute=0, second=0).strftime('%Y-%m-%d %H:%M')
-    end_time = my_date.replace(hour=23, minute=59, second=59).strftime('%Y-%m-%d %H:%M')
 
     messages = mapi.Folders(1).Folders(2).Items
     # messages = messages.Restrict("[ReceivedTime] >= '" + start_time + "' And [ReceivedTime] <= '" + end_time + "'")
@@ -154,5 +151,6 @@ if __name__ == '__main__':
     logging.info("BainbidgePosition started", exc_info=True)
     my_date = datetime.today()
     bainbridge_all_pos_email(my_date)
+
 
 
