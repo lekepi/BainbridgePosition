@@ -1,6 +1,6 @@
 import win32com.client
 import os
-from datetime import datetime, timedelta
+from datetime import date, timedelta
 from models import config_class, session, PositionBainb, ParentFund, Product, TaskChecker
 from utils import task_checker_db, add_log_db
 import pandas as pd
@@ -19,10 +19,10 @@ def clean_ticker(ticker):
     temp = temp.replace(" Equity", "")
     temp = temp.replace(" GR", " GY")
     temp = temp.replace(" CT", " CN")
-    temp = temp.replace(" CT", " CN")
     temp = temp.replace("SXO1 Index", "SXO1 EUX")
     temp = temp.replace("ES1 Index", "ES1 CME")
     temp = temp.replace("GC1 Comdty", "GC1 CMX")
+    temp = temp.replace("CF1 Index", "CF1 EOP")
     return temp
 
 
@@ -192,10 +192,9 @@ def get_nav_report_from_email(my_date):
                     task_name='Bainb Nav', task_type='Task Scheduler')
 
 
-
 if __name__ == '__main__':
     logging.info("BainbidgePosition started", exc_info=True)
-    my_date = datetime.today()
+    my_date = date.today()
     day = timedelta(days=1)
     day3 = timedelta(days=3)
     if my_date.weekday() == 0:
