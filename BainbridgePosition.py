@@ -41,8 +41,8 @@ def bainbridge_all_pos_email(my_date):
     task_checker_list = session.query(TaskChecker).filter(TaskChecker.task_details.startswith('Bainb Position')).\
         filter(TaskChecker.task_details.endswith(my_date_str)).filter(TaskChecker.status == 'Success').all()
 
-    filename_list = ['Boothbay', 'ALTRA AMN', 'Ananda Market Neutral', 'ALTO']
-    parent_fund_list = ['Boothbay', 'Bainbridge', 'Neutral', 'Alto']
+    filename_list = ['Boothbay', 'ALTRA AMN', 'ALTO']  # ['Boothbay', 'ALTRA AMN', 'Ananda Market Neutral', 'ALTO']
+    parent_fund_list = ['Boothbay', 'Bainbridge', 'Alto']  # ['Boothbay', 'Bainbridge', 'Neutral', 'Alto']
     for index, filename in enumerate(filename_list):
         search_file = f"{filename} - Morning Positions - {my_date_str}"
         fund_name = parent_fund_list[index]
