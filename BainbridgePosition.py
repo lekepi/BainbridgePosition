@@ -14,6 +14,13 @@ logging.basicConfig(format='%(asctime)s-%(levelname)s-%(message)s', level=loggin
 BAINBRIDGE_DIR = config_class.BAINBRIDGE_PATH
 
 
+def find_mapi_folder_num(mapi, my_email):
+    num = 1
+    while str(mapi.folders(num)) != my_email:
+        num += 1
+    return num
+
+
 def clean_ticker(ticker):
     temp = ticker
     temp = temp.replace(" Equity", "")
@@ -57,15 +64,15 @@ def bainbridge_pos_email(my_date, search_file, fund_name):
     local_path = check_path(my_date)
     outlook = win32com.client.Dispatch('outlook.application')
     mapi = outlook.GetNamespace('MAPI')
-
+    mapi_num = find_mapi_folder_num(mapi, 'olivier@ananda-am.com')
     found_message = None
     bb_num = 0
-    for index, folder in enumerate(mapi.Folders(1).Folders(2).folders):
+    for index, folder in enumerate(mapi.Folders(mapi_num).Folders(2).folders):
         if folder.name == 'BainBridge Daily File':
             bb_num = index + 1
             break
 
-    messages = mapi.Folders(1).Folders(2).Items
+    messages = mapi.Folders(mapi_num).Folders(2).Items
     # messages = messages.Restrict("[ReceivedTime] >= '" + start_time + "' And [ReceivedTime] <= '" + end_time + "'")
     messages.Sort("[ReceivedTime]", Descending=True)
 
@@ -74,7 +81,7 @@ def bainbridge_pos_email(my_date, search_file, fund_name):
             found_message = message
 
     if not found_message:
-        messages = mapi.Folders(1).Folders(2).Folders(bb_num).Items
+        messages = mapi.Folders(mapi_num).Folders(2).Folders(bb_num).Items
         # messages = messages.Restrict("[ReceivedTime] >= '" + start_time + "' And [ReceivedTime] <= '" + end_time + "'")
         messages.Sort("[ReceivedTime]", Descending=True)
         for message in messages:
@@ -152,15 +159,16 @@ def get_nav_report_from_email(my_date):
     local_path = check_path(my_date)
     outlook = win32com.client.Dispatch('outlook.application')
     mapi = outlook.GetNamespace('MAPI')
+    mapi_num = find_mapi_folder_num(mapi, 'olivier@ananda-am.com')
 
     found_message = None
     bb_num = 0
-    for index, folder in enumerate(mapi.Folders(1).Folders(2).folders):
+    for index, folder in enumerate(mapi.Folders(mapi_num).Folders(2).folders):
         if folder.name == 'BainBridge Daily File':
             bb_num = index + 1
             break
 
-    messages = mapi.Folders(1).Folders(2).Items
+    messages = mapi.Folders(mapi_num).Folders(2).Items
     messages.Sort("[ReceivedTime]", Descending=True)
 
     for message in messages:
@@ -169,7 +177,7 @@ def get_nav_report_from_email(my_date):
             break
 
     if not found_message:
-        messages = mapi.Folders(1).Folders(2).Folders(bb_num).Items
+        messages = mapi.Folders(mapi_num).Folders(2).Folders(bb_num).Items
         messages.Sort("[ReceivedTime]", Descending=True)
         for message in messages:
             subject = message.subject
